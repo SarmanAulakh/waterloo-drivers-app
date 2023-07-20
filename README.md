@@ -23,6 +23,7 @@ npm start
 npm android
 
 # Run the app on iOS simulator: requires a mac
+npx pod-install
 npm ios
 
 ```

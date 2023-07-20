@@ -1,33 +1,48 @@
 import {
+  Dimensions,
   SafeAreaView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from "react-native";
 import React from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
-import { Ionicons } from "@expo/vector-icons";
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types";
-import AppTextInput from "../components/AppTextInput";
+const { height } = Dimensions.get("window");
 
-type Props = NativeStackScreenProps<RootStackParamList, "Login">;
-
-const LoginScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+export default function LoginScreen(){
   return (
     <SafeAreaView>
       <View>
-        <Text>LoginScreen</Text>
+        <Text>LoginScreen test</Text>
       </View>
     </SafeAreaView>
   );
 };
 
-export default LoginScreen;
-
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    paddingHorizontal: 30,
+    paddingVertical: 50,
+    justifyContent: 'space-around',
+  },
+  nerdImage: {
+    width: 80,
+    height: 80,
+  },
+  availableText: {
+    fontSize: 40,
+    marginVertical: 3,
+  },
+  textContainer: {
+    alignItems: 'center',
+  },
+  buttonsContainer: {
+    alignItems: 'center',
+    alignSelf: 'stretch',
+  },
+  button: {
+    alignSelf: 'stretch',
+    marginBottom: 20,
+  },
+});
