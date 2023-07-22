@@ -8,6 +8,9 @@ import RegisterScreen from "../screens/RegisterScreen";
 import BottomTabs from "./BottomTabs";
 import { PersistGate } from "redux-persist/integration/react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
+import RegistrationInfoScreen from "../screens/RegistrationInfoScreen";
+import WelcomeScreen from "../screens/WelcomeScreen";
+import LoginScreen from "../screens/LoginScreen";
 
 const theme = {
   ...DefaultTheme,
@@ -41,9 +44,14 @@ export default function Navigation() {
             headerShown: true,
           }}
         >
-          <Stack.Screen name="Welcome" component={BottomTabs} />
-          <Stack.Screen name="Login" component={BottomTabs} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen
+            name="RegistrationInfo"
+            component={RegistrationInfoScreen}
+          />
+          <Stack.Screen name="Home" component={BottomTabs} />
         </Stack.Navigator>
       </PersistGate>
     </NavigationContainer>

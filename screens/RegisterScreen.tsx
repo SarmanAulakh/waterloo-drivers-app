@@ -6,26 +6,51 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
-import Spacing from "../constants/Spacing";
-import FontSize from "../constants/FontSize";
-import Colors from "../constants/Colors";
-import Font from "../constants/Font";
-import { Ionicons } from "@expo/vector-icons";
+import React, { useState } from "react";
+import { firebaseAppAuth } from "../firebaseAuth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
-import AppTextInput from "../components/AppTextInput";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Register">;
 
-const RegisterScreen: React.FC<Props> = ({ navigation: { navigate } }) => {
+export default function RegisterScreen({ navigation }: Props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignup = () => {
+    createUserWithEmailAndPassword(firebaseAppAuth, email, password)
+      .then((userCredential) => {
+        navigation.navigate("RegistrationInfo");
+      })
+      .catch((error) => {
+        console.log("Signup error:", error.message);
+      });
+  };
+
   return (
     <SafeAreaView>
       <View>
-        <Text>RegisterScreen</Text>
+        <Text>Signup Page</Text>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity onPress={handleSignup}>
+          <Text>Register</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text>Login</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-};
-
-export default RegisterScreen;
+}

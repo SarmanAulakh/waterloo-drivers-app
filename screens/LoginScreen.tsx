@@ -1,48 +1,55 @@
 import {
-  Dimensions,
   SafeAreaView,
-  StyleSheet,
-  Text,
   View,
+  Text,
+  TouchableOpacity,
+  TextInput,
 } from "react-native";
-import React from "react";
-const { height } = Dimensions.get("window");
+import { firebaseAppAuth } from "../firebaseAuth";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useState } from "react";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types";
 
-export default function LoginScreen(){
+type Props = NativeStackScreenProps<RootStackParamList, "Login">;
+
+export default function LoginScreen({ navigation }: Props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    signInWithEmailAndPassword(firebaseAppAuth, email, password)
+      .then((userCredential) => {
+        navigation.navigate("Home");
+      })
+      .catch((error) => {
+        console.log("Login error:", error.message);
+      });
+  };
+
   return (
     <SafeAreaView>
       <View>
-        <Text>LoginScreen test</Text>
+        <Text>Login Page</Text>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity onPress={handleLogin}>
+          <Text>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+          <Text>Register</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 30,
-    paddingVertical: 50,
-    justifyContent: 'space-around',
-  },
-  nerdImage: {
-    width: 80,
-    height: 80,
-  },
-  availableText: {
-    fontSize: 40,
-    marginVertical: 3,
-  },
-  textContainer: {
-    alignItems: 'center',
-  },
-  buttonsContainer: {
-    alignItems: 'center',
-    alignSelf: 'stretch',
-  },
-  button: {
-    alignSelf: 'stretch',
-    marginBottom: 20,
-  },
-});
+}

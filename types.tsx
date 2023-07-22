@@ -12,21 +12,21 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 // }
 
 export type RootStackParamList = {
-  Welcome: {
-    name: string,
-    birthYear: string
-  };
+  Welcome: undefined;
   Login: undefined;
   Register: undefined;
+  RegistrationInfo: undefined;
+  Home: undefined;
 };
 
 export type TabNavigationParamList = {
-  Welcome: {
-    name: string,
-    birthYear: string
-  };
+  // Welcome: {
+  //   name: string,
+  //   birthYear: string
+  // };
   Login: undefined;
   Register: undefined;
+  Home: undefined;
 };
 
 // For a scenario where our Settings Screen requires the userID as a parameter, our param list would be like this:
