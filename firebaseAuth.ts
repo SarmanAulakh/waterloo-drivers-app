@@ -1,5 +1,4 @@
 import { initializeApp } from 'firebase/app';
-import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -13,7 +12,6 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-getAnalytics(firebaseApp);
 
 export const firebaseAppAuth = getAuth(firebaseApp);
 // export const authProvider = new EmailAuthProvider()

@@ -3,11 +3,16 @@ import { StatusBar } from "expo-status-bar";
 import { Provider as StoreProvider } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
-import { PersistGate } from 'redux-persist/integration/react';
+import { ThemeProvider, createTheme } from "@rneui/themed";
 
 import fonts from "./config/fonts";
 import Navigation from "./navigation";
-import { store, persistor } from './redux/store';
+import { store } from "./redux/store";
+
+const theme = createTheme({
+  lightColors: {},
+  darkColors: {},
+});
 
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);
@@ -18,8 +23,10 @@ export default function App() {
     <StoreProvider store={store}>
       <PaperProvider>
         <SafeAreaProvider>
-          <Navigation />
-          <StatusBar />
+          <ThemeProvider theme={theme}>
+            <Navigation />
+            <StatusBar />
+          </ThemeProvider>
         </SafeAreaProvider>
       </PaperProvider>
     </StoreProvider>
