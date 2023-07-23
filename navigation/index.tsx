@@ -40,16 +40,17 @@ export default function Navigation() {
       >
         <Stack.Navigator
           initialRouteName="Welcome"
-          screenOptions={{
-            headerShown: true,
-          }}
+          // screenOptions={{
+          //   headerShown: false,
+          // }}
         >
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Welcome" component={WelcomeScreen} options={{headerShown: false}} />
+          <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}}/>
+          <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}} />
           <Stack.Screen
             name="RegistrationInfo"
             component={RegistrationInfoScreen}
+            options={{headerShown: false}}
           />
           <Stack.Screen name="Home" component={BottomTabs} />
         </Stack.Navigator>

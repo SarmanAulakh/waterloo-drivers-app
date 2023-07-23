@@ -3,11 +3,12 @@
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start",
+    "start": "npx expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest --watchAll",
+    "devtools": "react-devtools"
   },
   "jest": {
     "preset": "jest-expo"
@@ -22,6 +23,7 @@
     "@rneui/themed": "^4.0.0-rc.7",
     "expo": "~47.0.8",
     "expo-asset": "~8.6.2",
+    "expo-cli": "^6.3.10",
     "expo-constants": "~14.0.2",
     "expo-font": "~11.0.1",
     "expo-linking": "~3.2.3",
@@ -30,12 +32,15 @@
     "expo-system-ui": "~2.0.1",
     "expo-web-browser": "~12.0.0",
     "firebase": "^10.0.0",
+    "global": "^4.4.0",
     "react": "18.1.0",
+    "react-devtools": "^4.28.0",
     "react-dom": "18.1.0",
     "react-native": "0.70.12",
     "react-native-paper": "^5.9.1",
     "react-native-safe-area-context": "^4.7.1",
     "react-native-screens": "~3.18.0",
+    "react-native-status-bar-height": "^2.6.0",
     "react-native-vector-icons": "^10.0.0",
     "react-native-web": "~0.18.9",
     "react-redux": "^8.1.1",

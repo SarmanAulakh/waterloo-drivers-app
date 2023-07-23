@@ -28,6 +28,22 @@ npm ios
 
 ```
 
+## Debugging
+
+```
+npm i --dev react-devtools (can also be global)
+
+while the app is running:
+in a seperate project terminal run: react-devtools
+
+then hit reload app in the simulator (click OK on the tut popup to see it)
+
+OR
+
+macos: shift + M in same terminal as npm start
+macos: command + d : to toggle the expo menu
+```
+
 
 ## 🚀 Acknowledgements
 
