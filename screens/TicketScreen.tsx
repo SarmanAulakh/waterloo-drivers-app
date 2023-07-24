@@ -1,7 +1,6 @@
 import {
   SafeAreaView,
   View,
-  Text,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
@@ -10,7 +9,7 @@ import {
   ScrollView,
 } from "react-native";
 import {
-  Avatar,
+  Text,
   Button,
   Icon,
   Image,
@@ -24,162 +23,68 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, TabNavigationParamList } from "../types";
-import { Vehicle } from "../types/apiTypes";
+import { Ticket, Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+import TicketCard from "../components/TicketCard";
+import { useGetUserTicketsQuery, useGetUserVehiclesQuery } from "../api";
+import { useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
+import Background from "../components/Background";
 
 type Props = NativeStackScreenProps<TabNavigationParamList, "Ticket">;
 
 export default function TicketScreen({ navigation }: Props) {
-  const styles = useStyles();
-  const [expanded, setExpanded] = useState<number | null>(null);
+  const user = useAppSelector((state: RootState) => state.auth.user);
+
+  const { data: userTickets } = useGetUserTicketsQuery(user!.firebase_id, {
+    skip: !user!,
+  });
+  const { data: userVehicles } = useGetUserVehiclesQuery(user!.firebase_id, {
+    skip: !user!,
+  });
+
   const renderListCards = () => {
-    return [].map((vehicle, index) => (
-      <ListItem.Accordion
-        content={
-          <>
-            <View style={{ marginHorizontal: 15 }}>
-              <AntDesign name="car" size={24} color="black" />
-            </View>
-            <ListItem.Content>
-              <ListItem.Title></ListItem.Title>
-            </ListItem.Content>
-          </>
-        }
-        isExpanded={expanded === index}
-        onPress={() => {
-          setExpanded((prev) => (prev == null ? index : null));
-        }}
-        bottomDivider
-        topDivider
-        containerStyle={{ backgroundColor: Colors.secondary }}
-      >
-        <ListItem bottomDivider>
-          <ListItem.Content>
-            {/* <ListItem.Title>{vehicle.licence_plate}</ListItem.Title> */}
-            {/* <ListItem.Subtitle>{vehicle.year}</ListItem.Subtitle> */}
-            <ListItem.Title>Other Drivers:</ListItem.Title>
-            <ListItem.Subtitle>Driver A</ListItem.Subtitle>
-            <ListItem.Subtitle>Driver B</ListItem.Subtitle>
-          </ListItem.Content>
-          <Button
-            icon={
-              <Icon
-                name="md-person-add"
-                type="ionicon"
-                color="black"
-                size={24}
-              />
-            }
-            buttonStyle={{ backgroundColor: Colors.tertiary }}
-          />
-        </ListItem>
-      </ListItem.Accordion>
+    return tickets.map((ticket, index) => (
+      <TicketCard
+        key={ticket.id}
+        ticket={ticket}
+        vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
+        url="Mock Url"
+      />
     ));
   };
 
   return (
-    <>
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          borderRadius: 5,
-          alignItems: "center",
-          marginHorizontal: 10,
-          height: 250,
-          marginBottom: 10,
-        }}
-      >
-        <View style={{ flex: 3, flexDirection: "row" }}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <Avatar
-              size={145}
-              source={{
-                uri: "https://randomuser.me/api/portraits/lego/1.jpg",
-              }}
-              // activeOpacity={0.7}
-              avatarStyle={{
-                borderRadius: 145 / 2,
-                borderColor: "black",
-                borderWidth: 0.5,
-              }}
-              overlayContainerStyle={{ backgroundColor: "transparent" }}
-            />
-          </View>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              // alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 25, marginLeft: -15 }}>Paul Allen</Text>
-            <Text style={{ fontSize: 18, marginLeft: -15 }}>
-              test@email.com
-            </Text>
-            <Text style={{ fontSize: 18, marginLeft: -15, marginTop: 15 }}>
-              S8033-01040-10226
-            </Text>
-          </View>
-        </View>
-        <View
-          style={{
-            width: 300,
-            borderWidth: 0.5,
-            borderColor: "rgba(222, 223, 226, 1)",
-            marginHorizontal: 20,
-            height: 1,
-            marginVertical: 10,
-          }}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <Button
-              title="Add Vehicle"
-              buttonStyle={styles.addVehicleButton}
-              titleStyle={{
-                fontSize: 16,
-                fontWeight: "bold",
-                color: Colors.primaryText,
-              }}
-              onPress={() => console.log("aye")}
-            />
-          </View>
-        </View>
-      </View>
-      <ScrollView>
-        <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
-      </ScrollView>
-    </>
+    <ScrollView style={{ padding: 20 }}>
+      <Text h4>Unpaid Tickets:</Text>
+      <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
+      <Text h4>Past History:</Text>
+      <Text>Empty</Text>
+    </ScrollView>
   );
 }
 
-const useStyles = makeStyles((theme) => ({
-  addVehicleButton: {
-    backgroundColor: Colors.primary,
-    height: 42,
-    width: 142,
-    borderRadius: 5,
-    paddingVertical: 5,
+const date = new Date().toLocaleDateString();
+const tickets: Ticket[] = [
+  {
+    id: 1,
+    vehicle_id: 7,
+    cost: 52.16,
+    type: "Parking",
+    issue_date: date,
+    due_date: date,
+    created_at: date,
+    updated_at: date,
   },
-}));
-
-type UserData = {
-  name: string;
-  avatar: string;
-  value: string;
-  positive: boolean;
-};
+  {
+    id: 2,
+    vehicle_id: 7,
+    cost: 52.16,
+    type: "Parking",
+    issue_date: date,
+    due_date: date,
+    created_at: date,
+    updated_at: date,
+  },
+];

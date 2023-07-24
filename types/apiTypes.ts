@@ -20,6 +20,17 @@ export interface Vehicle {
   updated_at: string;
 }
 
+export interface Ticket {
+  id: number;
+  vehicle_id: number;
+  cost: number;
+  type: string;
+  issue_date: string;
+  due_date: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export type CreateUser = {
   user: {
     firebase_id: string;

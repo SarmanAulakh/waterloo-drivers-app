@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   CreateUser,
   CreateUserVehicle,
+  Ticket,
   User,
   Vehicle,
 } from "../types/apiTypes";
@@ -39,6 +40,9 @@ export const api = createApi({
       }),
       invalidatesTags: ["Vehicles"]
     }),
+    getUserTickets: builder.query<Ticket[], string>({
+      query: (firebaseUserId) => ({ url: `/users/${firebaseUserId}/tickets` }),
+    }),
   }),
 });
 
@@ -48,4 +52,5 @@ export const {
   useCreateUserMutation,
   useGetUserVehiclesQuery,
   useCreateUserVehicleMutation,
+  useGetUserTicketsQuery
 } = api;
