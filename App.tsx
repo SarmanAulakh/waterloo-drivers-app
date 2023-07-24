@@ -3,13 +3,12 @@ import { StatusBar } from "expo-status-bar";
 import { Provider as StoreProvider } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
-import { ThemeProvider, createTheme } from "@rneui/themed";
+import * as eva from "@eva-design/eva";
+import { ApplicationProvider } from "@ui-kitten/components";
 
 import fonts from "./config/fonts";
 import Navigation from "./navigation";
 import { store } from "./redux/store";
-
-const theme = createTheme();
 
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);
@@ -20,10 +19,10 @@ export default function App() {
     <StoreProvider store={store}>
       <PaperProvider>
         <SafeAreaProvider>
-          <ThemeProvider theme={theme}>
+          <ApplicationProvider {...eva} theme={eva.light}>
             <Navigation />
             <StatusBar />
-          </ThemeProvider>
+          </ApplicationProvider>
         </SafeAreaProvider>
       </PaperProvider>
     </StoreProvider>

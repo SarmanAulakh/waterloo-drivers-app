@@ -24,7 +24,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, TabNavigationParamList } from "../types";
-import { useGetVehiclesQuery } from "../api";
 import { Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
@@ -35,7 +34,7 @@ export default function TicketScreen({ navigation }: Props) {
   const styles = useStyles();
   const [expanded, setExpanded] = useState<number | null>(null);
   const renderListCards = () => {
-    return USER_VEHCILES.map((vehicle, index) => (
+    return [].map((vehicle, index) => (
       <ListItem.Accordion
         content={
           <>
@@ -43,9 +42,7 @@ export default function TicketScreen({ navigation }: Props) {
               <AntDesign name="car" size={24} color="black" />
             </View>
             <ListItem.Content>
-              <ListItem.Title>
-                {vehicle.make} - {vehicle.model}
-              </ListItem.Title>
+              <ListItem.Title></ListItem.Title>
             </ListItem.Content>
           </>
         }
@@ -59,8 +56,8 @@ export default function TicketScreen({ navigation }: Props) {
       >
         <ListItem bottomDivider>
           <ListItem.Content>
-            <ListItem.Title>{vehicle.licence_plate}</ListItem.Title>
-            <ListItem.Subtitle>{vehicle.year}</ListItem.Subtitle>
+            {/* <ListItem.Title>{vehicle.licence_plate}</ListItem.Title> */}
+            {/* <ListItem.Subtitle>{vehicle.year}</ListItem.Subtitle> */}
             <ListItem.Title>Other Drivers:</ListItem.Title>
             <ListItem.Subtitle>Driver A</ListItem.Subtitle>
             <ListItem.Subtitle>Driver B</ListItem.Subtitle>
@@ -186,24 +183,3 @@ type UserData = {
   value: string;
   positive: boolean;
 };
-
-const USER_VEHCILES: Vehicle[] = [
-  {
-    id: 1,
-    created_at: "2023-07-21T01:16:45.143Z",
-    updated_at: "2023-07-21T01:16:45.143Z",
-    licence_plate: "ASBC123",
-    make: "Toyota",
-    model: "Corolla",
-    year: 2005,
-  },
-  {
-    id: 2,
-    created_at: "2023-07-21T01:24:58.363Z",
-    updated_at: "2023-07-21T01:24:58.363Z",
-    licence_plate: "ABCD123",
-    make: "Toyota",
-    model: "Corolla",
-    year: 2005,
-  },
-];

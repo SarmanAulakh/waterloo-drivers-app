@@ -15,8 +15,8 @@ export type RootStackParamList = {
   Welcome: undefined;
   Login: undefined;
   Register: undefined;
-  RegistrationInfo: undefined;
   Main: undefined;
+  AddVehicle: undefined; // NOTE: you cannot pass unserializable data as params such as a function
   // Home: undefined; // only here so login and register can navigate to it
 };
 

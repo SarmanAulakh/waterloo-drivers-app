@@ -15,6 +15,7 @@ export interface Vehicle {
   make: string;
   model: string;
   year: number;
+  province: string;
   created_at: string;
   updated_at: string;
 }
@@ -29,9 +30,10 @@ export type CreateUser = {
   };
 };
 
-export type CreateUserVehicleRegisteration = {
+export type CreateUserVehicle = {
   vehicle: {
     licence_plate: string;
+    province: string;
     make: string;
     model: string;
     year: string;

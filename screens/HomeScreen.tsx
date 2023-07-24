@@ -1,7 +1,6 @@
 import {
   SafeAreaView,
   View,
-  Text,
   TouchableOpacity,
   TextInput,
   ActivityIndicator,
@@ -11,6 +10,7 @@ import {
 } from "react-native";
 import {
   Avatar,
+  Text,
   Button,
   Icon,
   Image,
@@ -19,31 +19,36 @@ import {
   makeStyles,
   withTheme,
 } from "@rneui/themed";
-import { firebaseAppAuth } from "../firebaseAuth";
-import { signInWithEmailAndPassword } from "firebase/auth";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, TabNavigationParamList } from "../types";
-import { useGetVehiclesQuery } from "../api";
-import { Vehicle } from "../types/apiTypes";
+import { useGetUserVehiclesQuery } from "../api";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
 
-type Props = NativeStackScreenProps<TabNavigationParamList, "Home">;
+type Props = NativeStackScreenProps<
+  TabNavigationParamList & RootStackParamList,
+  "Home"
+>;
 
 export default function HomeScreen({ navigation }: Props) {
   const styles = useStyles();
   const user = useAppSelector((state: RootState) => state.auth.user);
 
-  console.log(user);
+  const { data, refetch, isLoading } = useGetUserVehiclesQuery(user!.firebase_id, {
+    skip: !user!,
+  });
+
+  console.log(data)
 
   const [expanded, setExpanded] = useState<number | null>(null);
 
   const renderListCards = () => {
-    return USER_VEHCILES.map((vehicle, index) => (
+    return data?.map((vehicle, index) => (
       <ListItem.Accordion
+        key={vehicle.licence_plate}
         content={
           <>
             <View style={{ marginHorizontal: 15 }}>
@@ -131,9 +136,7 @@ export default function HomeScreen({ navigation }: Props) {
             }}
           >
             <Text style={{ fontSize: 25, marginLeft: -15 }}>{user?.name}</Text>
-            <Text style={{ fontSize: 18, marginLeft: -15 }}>
-              {user?.email}
-            </Text>
+            <Text style={{ fontSize: 18, marginLeft: -15 }}>{user?.email}</Text>
             <Text style={{ fontSize: 18, marginLeft: -15, marginTop: 15 }}>
               {user?.drivers_licence_number}
             </Text>
@@ -165,7 +168,7 @@ export default function HomeScreen({ navigation }: Props) {
                 fontWeight: "bold",
                 color: Colors.primaryText,
               }}
-              onPress={() => console.log("aye")}
+              onPress={() => navigation.navigate("AddVehicle")}
             />
           </View>
         </View>
@@ -186,31 +189,3 @@ const useStyles = makeStyles((theme) => ({
     paddingVertical: 5,
   },
 }));
-
-type UserData = {
-  name: string;
-  avatar: string;
-  value: string;
-  positive: boolean;
-};
-
-const USER_VEHCILES: Vehicle[] = [
-  {
-    id: 1,
-    created_at: "2023-07-21T01:16:45.143Z",
-    updated_at: "2023-07-21T01:16:45.143Z",
-    licence_plate: "ASBC123",
-    make: "Toyota",
-    model: "Corolla",
-    year: 2005,
-  },
-  {
-    id: 2,
-    created_at: "2023-07-21T01:24:58.363Z",
-    updated_at: "2023-07-21T01:24:58.363Z",
-    licence_plate: "ABCD123",
-    make: "Toyota",
-    model: "Corolla",
-    year: 2005,
-  },
-];
