@@ -28,19 +28,12 @@ import { useGetVehiclesQuery } from "../api";
 import { Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import { useAppSelector } from "../redux/hooks";
-import { RootState } from "../redux/store";
 
-type Props = NativeStackScreenProps<TabNavigationParamList, "Home">;
+type Props = NativeStackScreenProps<TabNavigationParamList, "Ticket">;
 
-export default function HomeScreen({ navigation }: Props) {
+export default function TicketScreen({ navigation }: Props) {
   const styles = useStyles();
-  const user = useAppSelector((state: RootState) => state.auth.user);
-
-  console.log(user);
-
   const [expanded, setExpanded] = useState<number | null>(null);
-
   const renderListCards = () => {
     return USER_VEHCILES.map((vehicle, index) => (
       <ListItem.Accordion
@@ -130,12 +123,12 @@ export default function HomeScreen({ navigation }: Props) {
               // alignItems: "center",
             }}
           >
-            <Text style={{ fontSize: 25, marginLeft: -15 }}>{user?.name}</Text>
+            <Text style={{ fontSize: 25, marginLeft: -15 }}>Paul Allen</Text>
             <Text style={{ fontSize: 18, marginLeft: -15 }}>
-              {user?.email}
+              test@email.com
             </Text>
             <Text style={{ fontSize: 18, marginLeft: -15, marginTop: 15 }}>
-              {user?.drivers_licence_number}
+              S8033-01040-10226
             </Text>
           </View>
         </View>

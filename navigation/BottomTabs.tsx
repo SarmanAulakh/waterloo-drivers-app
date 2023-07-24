@@ -1,17 +1,43 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import WelcomeScreen from '../screens/WelcomeScreen';
-import LoginScreen from '../screens/LoginScreen';
-import { TabNavigationParamList } from '../types';
-import HomeScreen from '../screens/HomeScreen';
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { TabNavigationParamList } from "../types";
+import HomeScreen from "../screens/HomeScreen";
+import React from "react";
+import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
+import Colors from "../constants/Colors";
+import TicketScreen from "../screens/TicketScreen";
 
 const Tab = createBottomTabNavigator<TabNavigationParamList>();
 
-// tabBarOptions={{style: {height: Platform.OS === 'ios' ? 90 : 50}}}
-
 export default function BottomTabs() {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={HomeScreen} />
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: true,
+        headerStyle: { backgroundColor: Colors.tertiary },
+        tabBarActiveTintColor: "blue",
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <AntDesign name="home" size={size} color={color} />
+          ),
+          tabBarStyle: { backgroundColor: Colors.secondary },
+        }}
+      />
+      <Tab.Screen
+        name="Ticket"
+        component={TicketScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="ticket-outline" size={size} color={color} />
+          ),
+          tabBarStyle: { backgroundColor: Colors.secondary },
+        }}
+      />
     </Tab.Navigator>
   );
-};
+}

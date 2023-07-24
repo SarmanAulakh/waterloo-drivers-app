@@ -9,10 +9,7 @@ import fonts from "./config/fonts";
 import Navigation from "./navigation";
 import { store } from "./redux/store";
 
-const theme = createTheme({
-  lightColors: {},
-  darkColors: {},
-});
+const theme = createTheme();
 
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);

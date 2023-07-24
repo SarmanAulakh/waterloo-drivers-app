@@ -6,18 +6,21 @@ import { AntDesign } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
 import Background from "../components/Background";
 import { CommonActions } from "@react-navigation/native";
+import { useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
 
 type Props = NativeStackScreenProps<RootStackParamList, "RegistrationInfo">;
 
 export default function RegistrationInfoScreen({ navigation }: Props) {
   const styles = useStyles();
+  const user = useAppSelector((state: RootState) => state.auth.user)
   const [driverLicense, setDriverLicense] = useState("");
   const [carLicensePlate, setCarLicensePlate] = useState("");
   const [carModel, setCarModel] = useState("");
   const [carYear, setCarYear] = useState("");
 
   const handleRegistrationInfoSubmit = () => {
-    
+
 
 
     // navigate to home and clear nav histroy (can't go back to login/register)

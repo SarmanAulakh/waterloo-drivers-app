@@ -16,17 +16,13 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   RegistrationInfo: undefined;
-  Home: undefined;
+  Main: undefined;
+  // Home: undefined; // only here so login and register can navigate to it
 };
 
 export type TabNavigationParamList = {
-  // Welcome: {
-  //   name: string,
-  //   birthYear: string
-  // };
-  Login: undefined;
-  Register: undefined;
   Home: undefined;
+  Ticket: undefined;
 };
 
 // For a scenario where our Settings Screen requires the userID as a parameter, our param list would be like this:
