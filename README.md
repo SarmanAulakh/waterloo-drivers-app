@@ -20,11 +20,11 @@ npm install
 npm start
 
 # Run the app on Android simulator
-npm android
+npm run android
 
 # Run the app on iOS simulator: requires a mac
 npx pod-install
-npm ios
+npm run ios
 
 ```
 

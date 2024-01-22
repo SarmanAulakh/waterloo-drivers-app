@@ -25,8 +25,10 @@ import { RootStackParamList, TabNavigationParamList } from "../types";
 import { useGetUserVehiclesQuery } from "../api";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
-import { useAppSelector } from "../redux/hooks";
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
+import InviteUserModal from "../components/InviteUserModal";
+import { logOut } from "../redux/slices/authSlice";
 
 type Props = NativeStackScreenProps<
   TabNavigationParamList & RootStackParamList,
@@ -35,13 +37,18 @@ type Props = NativeStackScreenProps<
 
 export default function HomeScreen({ navigation }: Props) {
   const styles = useStyles();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.auth.user);
+  const [visible, setVisible] = useState(false);
 
-  const { data, refetch, isLoading } = useGetUserVehiclesQuery(user!.firebase_id, {
-    skip: !user!,
-  });
+  const { data, refetch, isLoading } = useGetUserVehiclesQuery(
+    user!.firebase_id,
+    {
+      skip: !user!,
+    }
+  );
 
-  console.log(data)
+  console.log(data);
 
   const [expanded, setExpanded] = useState<number | null>(null);
 
@@ -73,7 +80,9 @@ export default function HomeScreen({ navigation }: Props) {
           <ListItem.Content>
             <ListItem.Title>{vehicle.licence_plate}</ListItem.Title>
             <ListItem.Subtitle>{vehicle.year}</ListItem.Subtitle>
-            <ListItem.Title>Other Drivers:</ListItem.Title>
+            <ListItem.Title style={{ paddingTop: 5 }}>
+              Other Drivers:
+            </ListItem.Title>
             <ListItem.Subtitle>Driver A</ListItem.Subtitle>
             <ListItem.Subtitle>Driver B</ListItem.Subtitle>
           </ListItem.Content>
@@ -87,8 +96,14 @@ export default function HomeScreen({ navigation }: Props) {
               />
             }
             buttonStyle={{ backgroundColor: Colors.tertiary }}
+            onPress={() => setVisible(true)}
           />
         </ListItem>
+        <InviteUserModal
+          vehicle={vehicle}
+          visible={visible}
+          setVisible={setVisible}
+        />
       </ListItem.Accordion>
     ));
   };
@@ -112,6 +127,7 @@ export default function HomeScreen({ navigation }: Props) {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
+              paddingTop: 20,
             }}
           >
             <Avatar
@@ -159,6 +175,20 @@ export default function HomeScreen({ navigation }: Props) {
             alignItems: "center",
           }}
         >
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <Button
+              title="Logout"
+              titleStyle={{
+                fontSize: 16,
+                fontWeight: "bold",
+                color: Colors.primaryText,
+              }}
+              onPress={() => {
+                navigation.navigate("Welcome");
+                dispatch(logOut());
+              }}
+            />
+          </View>
           <View style={{ flex: 1, alignItems: "center" }}>
             <Button
               title="Add Vehicle"
