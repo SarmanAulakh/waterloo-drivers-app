@@ -9,8 +9,28 @@ type Props = NativeStackScreenProps<TabNavigationParamList, "Ticket">;
 
 export default function MapScreen({ navigation }: Props) {
     const styles = useStyles();
-    return 
+    return (
+        <Background>
+            <View style={styles.container}>
+                <Text h3>City of Waterloo Map</Text>
+                
+            </View>
+        </Background>
+    );
 }
+
+const useStyles = makeStyles((theme) => ({
+    container: {
+        height: 200,
+        justifyContent: "space-between",
+        alignItems: "center",
+        alignSelf: "center",
+        padding: 20,
+    },
+    button: {
+        width: 200,
+    },
+}));
 
 const date = new Date().toLocaleDateString();
 const mapStyle = []
