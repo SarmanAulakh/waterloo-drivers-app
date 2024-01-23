@@ -27,7 +27,10 @@ import { Ticket, Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import TicketCard from "../components/TicketCard";
-import { useGetUserTicketsQuery, useGetUserVehiclesQuery } from "../api";
+import {
+  useGetUserTicketsQuery,
+  useGetUserVehiclesQuery,
+} from "../api/backendApi";
 import { useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
 import Background from "../components/Background";

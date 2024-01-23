@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer, persistStore } from "redux-persist";
-import { api } from "../api/index";
+import { emptySplitApi } from "../api";
 import authReducer from "./slices/authSlice";
 
 const persistConfig = {
@@ -15,13 +15,13 @@ const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
 export const store = configureStore({
   reducer: {
-    [api.reducerPath]: api.reducer,
+    [emptySplitApi.reducerPath]: emptySplitApi.reducer,
     auth: persistedAuthReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,
-    }).concat(api.middleware),
+    }).concat(emptySplitApi.middleware),
   devTools: process.env.ENV !== "prod",
 });
 

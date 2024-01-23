@@ -1,28 +1,16 @@
-import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  ScrollView,
-} from "react-native";
+import { View, ScrollView } from "react-native";
 import {
   Avatar,
   Text,
   Button,
   Icon,
-  Image,
   ListItem,
-  Theme,
   makeStyles,
-  withTheme,
 } from "@rneui/themed";
 import React, { useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, TabNavigationParamList } from "../types";
-import { useGetUserVehiclesQuery } from "../api";
+import { useGetUserVehiclesQuery } from "../api/backendApi";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -41,14 +29,9 @@ export default function HomeScreen({ navigation }: Props) {
   const user = useAppSelector((state: RootState) => state.auth.user);
   const [visible, setVisible] = useState(false);
 
-  const { data, refetch, isLoading } = useGetUserVehiclesQuery(
-    user!.firebase_id,
-    {
-      skip: !user!,
-    }
-  );
-
-  console.log(data);
+  const { data } = useGetUserVehiclesQuery(user!.firebase_id, {
+    skip: !user!,
+  });
 
   const [expanded, setExpanded] = useState<number | null>(null);
 
@@ -181,7 +164,7 @@ export default function HomeScreen({ navigation }: Props) {
               titleStyle={{
                 fontSize: 16,
                 fontWeight: "bold",
-                color: Colors.primaryText,
+                color: "#fff",
               }}
               onPress={() => {
                 navigation.navigate("Welcome");

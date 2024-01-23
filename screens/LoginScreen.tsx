@@ -9,7 +9,7 @@ import { showAlert } from "../components/alerts";
 import Background from "../components/Background";
 import BackButton from "../components/BackButton";
 import { setUser } from "../redux/slices/authSlice";
-import { useLazyGetUserQuery } from "../api";
+import { useLazyGetUserQuery } from "../api/backendApi";
 import { useAppDispatch } from "../redux/hooks";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;

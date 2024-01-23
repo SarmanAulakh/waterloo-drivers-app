@@ -7,7 +7,7 @@ import { RootStackParamList } from "../types";
 import { AntDesign } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
 import Background from "../components/Background";
-import { useCreateUserMutation } from "../api";
+import { useCreateUserMutation } from "../api/backendApi";
 import { setUser } from "../redux/slices/authSlice";
 import { showAlert } from "../components/alerts";
 import { CreateUser } from "../types/apiTypes";
