@@ -27,7 +27,10 @@ import { Ticket, Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import TicketCard from "../components/TicketCard";
-import { useGetUserTicketsQuery, useGetUserVehiclesQuery } from "../api";
+import {
+  useGetUserTicketsQuery,
+  useGetUserVehiclesQuery,
+} from "../api/backendApi";
 import { useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
 import Background from "../components/Background";
@@ -44,8 +47,9 @@ export default function TicketScreen({ navigation }: Props) {
     skip: !user!,
   });
 
-  const renderListCards = () => {
-    return tickets.map((ticket, index) => (
+  const renderPendingTickets = userTickets
+    ?.filter((t) => t.status === "pending")
+    .map((ticket) => (
       <TicketCard
         key={ticket.id}
         ticket={ticket}
@@ -53,38 +57,55 @@ export default function TicketScreen({ navigation }: Props) {
         url="Mock Url"
       />
     ));
-  };
+
+  const renderHistoryTickets = userTickets
+    ?.filter((t) => t.status !== "pending")
+    .map((ticket) => (
+      <TicketCard
+        key={ticket.id}
+        ticket={ticket}
+        vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
+        url="Mock Url"
+      />
+    ));
 
   return (
-    <ScrollView style={{ padding: 20 }}>
-      <Text h4>Unpaid Tickets:</Text>
-      <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
-      <Text h4>Past History:</Text>
-      <Text>Empty</Text>
+    <ScrollView>
+      <View style={{ padding: 20 }}>
+        <Text h4>Unpaid Tickets:</Text>
+        <View style={{ marginVertical: 10 }}>
+          {renderPendingTickets ?? <Text>Empty</Text>}
+        </View>
+        <Text h4>Past History:</Text>
+        <View style={{ marginVertical: 10 }}>
+          {renderHistoryTickets ?? <Text>Empty</Text>}
+        </View>
+        <Text>Empty</Text>
+      </View>
     </ScrollView>
   );
 }
 
-const date = new Date().toLocaleDateString();
-const tickets: Ticket[] = [
-  {
-    id: 1,
-    vehicle_id: 7,
-    cost: 52.16,
-    type: "Parking",
-    issue_date: date,
-    due_date: date,
-    created_at: date,
-    updated_at: date,
-  },
-  {
-    id: 2,
-    vehicle_id: 7,
-    cost: 52.16,
-    type: "Parking",
-    issue_date: date,
-    due_date: date,
-    created_at: date,
-    updated_at: date,
-  },
-];
+// const date = new Date().toLocaleDateString();
+// const tickets: Ticket[] = [
+//   {
+//     id: 1,
+//     vehicle_id: 7,
+//     cost: 52.16,
+//     type: "Parking",
+//     issue_date: date,
+//     due_date: date,
+//     created_at: date,
+//     updated_at: date,
+//   },
+//   {
+//     id: 2,
+//     vehicle_id: 7,
+//     cost: 52.16,
+//     type: "Parking",
+//     issue_date: date,
+//     due_date: date,
+//     created_at: date,
+//     updated_at: date,
+//   },
+// ];

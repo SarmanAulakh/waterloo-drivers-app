@@ -1,14 +1,17 @@
 import { StyleSheet, View, ViewProps } from "react-native";
 import { Button, Card, Text } from "@ui-kitten/components";
 import { Ticket, Vehicle } from "../types/apiTypes";
+import DisputeModal from "./DisputeModal";
+import { useState } from "react";
 
 interface Props {
   ticket: Ticket;
-  vehicle?: Vehicle,
+  vehicle?: Vehicle;
   url: string;
 }
 
 export default function TicketCard({ ticket, vehicle, url }: Props) {
+  const [visible, setVisible] = useState(false);
   const Header = (props: ViewProps | undefined): React.ReactElement => (
     <View {...props}>
       <Text category="h6">{ticket.type}</Text>
@@ -18,7 +21,12 @@ export default function TicketCard({ ticket, vehicle, url }: Props) {
 
   const Footer = (props: ViewProps | undefined): React.ReactElement => (
     <View {...props} style={[props?.style, styles.footerContainer]}>
-      <Button style={styles.footerControl} size="small" status="basic">
+      <Button
+        style={styles.footerControl}
+        size="small"
+        status="basic"
+        onPress={() => setVisible(true)}
+      >
         DISPUTE
       </Button>
       <Button style={styles.footerControl} size="small">
@@ -27,14 +35,24 @@ export default function TicketCard({ ticket, vehicle, url }: Props) {
     </View>
   );
   return (
-    <Card style={styles.card} header={Header} footer={Footer}>
-      <Text>Ticket ID: {ticket.id}</Text>
-      <Text>Due Date: {ticket.due_date}</Text>
-      <Text>Issue Date: {ticket.issue_date}</Text>
-      <Text>Vehcile: {vehicle ? `${vehicle.make} - ${vehicle.model} - ${vehicle.year}` : "_"} </Text>
-      <Text>License Plate: {vehicle ? vehicle.licence_plate : "_"}</Text>
-      <Text>Full Details: {url}</Text>
-    </Card>
+    <>
+      <Card style={styles.card} header={Header} footer={Footer}>
+        <Text>Ticket ID: {ticket.id}</Text>
+        <Text>Due Date: {new Date(ticket.due_date).toLocaleDateString()}</Text>
+        <Text>
+          Issue Date: {new Date(ticket.issue_date).toLocaleDateString()}
+        </Text>
+        <Text>
+          Vehcile:{" "}
+          {vehicle
+            ? `${vehicle.make} - ${vehicle.model} - ${vehicle.year}`
+            : "_"}{" "}
+        </Text>
+        <Text>License Plate: {vehicle ? vehicle.licence_plate : "_"}</Text>
+        <Text>Full Details: {url}</Text>
+      </Card>
+      <DisputeModal ticket={ticket} visible={visible} setVisible={setVisible} />
+    </>
   );
 }
 

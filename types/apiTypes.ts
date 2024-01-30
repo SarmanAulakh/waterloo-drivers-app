@@ -25,6 +25,7 @@ export interface Ticket {
   vehicle_id: number;
   cost: number;
   type: string;
+  status: string;
   issue_date: string;
   due_date: string;
   created_at: string;

@@ -1,7 +1,7 @@
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { persistor } from "../redux/store";
+import { RootState, persistor } from "../redux/store";
 import Colors from "../constants/Colors";
 import { RootStackParamList } from "../types";
 import RegisterScreen from "../screens/RegisterScreen";
@@ -11,6 +11,7 @@ import { ActivityIndicator, View, StyleSheet } from "react-native";
 import AddVehicleScreen from "../screens/AddVehicleScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
 import LoginScreen from "../screens/LoginScreen";
+import { useAppSelector } from "../redux/hooks";
 
 const theme = {
   ...DefaultTheme,
@@ -27,6 +28,7 @@ export type StackNavigationArray = Array<
 >;
 
 export default function Navigation() {
+  const user = useAppSelector((state: RootState) => state.auth.user);
   return (
     <NavigationContainer theme={theme}>
       <PersistGate
@@ -39,7 +41,8 @@ export default function Navigation() {
         persistor={persistor}
       >
         <Stack.Navigator
-          initialRouteName="Main"
+          initialRouteName={user ? "Main" : "Welcome"}
+          // initialRouteName="Welcome"
           screenOptions={{
             headerShown: false,
           }}
