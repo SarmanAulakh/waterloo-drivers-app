@@ -1,8 +1,12 @@
-import { useState } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import { useEffect, useState } from "react";
+import * as Linking from 'expo-linking';
+import { Alert, StyleSheet, View, ViewProps } from "react-native";
 import { Button, Card, Modal, Input, InputProps } from "@ui-kitten/components";
 import { Text } from "@rneui/themed";
 import { Ticket } from "../types/apiTypes";
+import { useStripe } from "@stripe/stripe-react-native";
+import { useGetPaymentSheetParamsQuery } from "../api/backendApi";
+import Constants from "expo-constants";
 
 interface Props {
   visible: boolean;
@@ -16,7 +20,50 @@ const useInputState = (initialValue = ""): InputProps => {
 };
 
 export default function DisputeModal({ visible, setVisible, ticket }: Props) {
+  const [loading, setLoading] = useState(false);
   const multilineInputState = useInputState();
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const { data: params } = useGetPaymentSheetParamsQuery(null);
+
+  const initializePaymentSheet = async () => {
+    const paymentIntent = params?.paymentIntent;
+    const ephemeralKey = params?.ephemeralKey;
+    const customer = params?.ephemeralKey;
+
+    const { error } = await initPaymentSheet({
+      merchantDisplayName: "WaterlooDriversApp, Inc.",
+      customerId: customer,
+      customerEphemeralKeySecret: ephemeralKey,
+      paymentIntentClientSecret: paymentIntent,
+      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
+      // methods that complete payment after a delay, like SEPA Debit and Sofort.
+      allowsDelayedPaymentMethods: true,
+      defaultBillingDetails: {
+        name: "Jane Doe",
+      },
+      returnURL:
+        Constants.appOwnership === "expo"
+          ? Linking.createURL("/--/")
+          : Linking.createURL(""),
+    });
+    if (!error) {
+      setLoading(true);
+    }
+  };
+
+  useEffect(() => {
+    initializePaymentSheet();
+  }, []);
+
+  const openPaymentSheet = async () => {
+    const { error } = await presentPaymentSheet();
+
+    if (error) {
+      Alert.alert(`Error code: ${error.code}`, error.message);
+    } else {
+      Alert.alert("Success", "Your order is confirmed!");
+    }
+  };
 
   const Footer = (props: ViewProps | undefined): React.ReactElement => (
     <View {...props} style={[props?.style, styles.footerContainer]}>
@@ -31,7 +78,8 @@ export default function DisputeModal({ visible, setVisible, ticket }: Props) {
       <Button
         style={styles.footerControl}
         size="small"
-        onPress={() => setVisible(false)}
+        onPress={openPaymentSheet}
+        disabled={!loading}
       >
         DISPUTE
       </Button>

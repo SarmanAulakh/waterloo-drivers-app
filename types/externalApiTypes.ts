@@ -7,3 +7,9 @@ export interface CarModel {
   objectId: string;
   updatedAt: string;
 }
+
+export interface StripePaymentSheetParams {
+  paymentIntent: any;
+  ephemeralKey: string;
+  customer: any;
+}
