@@ -17,12 +17,14 @@ export type RootStackParamList = {
   Register: undefined;
   Main: undefined;
   AddVehicle: undefined; // NOTE: you cannot pass unserializable data as params such as a function
+  Map: undefined;
   // Home: undefined; // only here so login and register can navigate to it
 };
 
 export type TabNavigationParamList = {
   Home: undefined;
   Ticket: undefined;
+  Map: undefined;
 };
 
 // For a scenario where our Settings Screen requires the userID as a parameter, our param list would be like this:

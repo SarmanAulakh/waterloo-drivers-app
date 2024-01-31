@@ -51,3 +51,13 @@ export type CreateUserVehicle = {
     year: string;
   };
 };
+
+export type MapMarkers = {
+  id: number;
+  latitude: string;
+  longitude: string;
+  icon_type: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+};

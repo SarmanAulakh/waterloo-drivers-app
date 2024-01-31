@@ -5,6 +5,7 @@ import {
   Ticket,
   User,
   Vehicle,
+  MapMarkers
 } from "../types/apiTypes";
 import { emptySplitApi } from ".";
 
@@ -42,6 +43,9 @@ export const api = emptySplitApi.injectEndpoints({
     getUserTickets: builder.query<Ticket[], string>({
       query: (firebaseUserId) => ({ url: `${BASE_URL}/users/${firebaseUserId}/tickets` }),
     }),
+    getMapMarkers: builder.query<MapMarkers[], null>({
+      query: () => ({ url: `${BASE_URL}/map_markers` }),
+    }),
   }),
 });
 
@@ -51,5 +55,6 @@ export const {
   useCreateUserMutation,
   useGetUserVehiclesQuery,
   useCreateUserVehicleMutation,
-  useGetUserTicketsQuery
+  useGetUserTicketsQuery,
+  useGetMapMarkersQuery
 } = api;
