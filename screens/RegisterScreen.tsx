@@ -40,6 +40,8 @@ export default function RegisterScreen({ navigation }: Props) {
           },
         };
 
+        console.log(body)
+
         createUser(body)
           .unwrap()
           .then((userRes) => {

@@ -17,6 +17,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
 import InviteUserModal from "../components/InviteUserModal";
 import { logOut } from "../redux/slices/authSlice";
+import AddCarModal from "../components/AddCarModal";
 
 type Props = NativeStackScreenProps<
   TabNavigationParamList & RootStackParamList,
@@ -28,8 +29,9 @@ export default function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.auth.user);
   const [visible, setVisible] = useState(false);
+  const [showAddCar, setShowAddCar] = useState(false);
 
-  const { data } = useGetUserVehiclesQuery(user!.firebase_id, {
+  const { data } = useGetUserVehiclesQuery(user?.firebase_id!, {
     skip: !user!,
   });
 
@@ -181,11 +183,16 @@ export default function HomeScreen({ navigation }: Props) {
                 fontWeight: "bold",
                 color: Colors.primaryText,
               }}
-              onPress={() => navigation.navigate("AddVehicle")}
+              onPress={() => setShowAddCar(true)}
             />
           </View>
         </View>
       </View>
+      <AddCarModal
+        navigation={navigation}
+        visible={showAddCar}
+        setVisible={setShowAddCar}
+      />
       <ScrollView>
         <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
       </ScrollView>

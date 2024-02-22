@@ -163,22 +163,6 @@ export default function AddVehicleScreen({ route, navigation }: Props) {
   );
 }
 
-// case sensitive on BE
-const provinces = [
-  "ontario",
-  "quebec",
-  // "Alberta",
-  // "British Columbia",
-  // "Manitoba",
-  // "New Brunswick",
-  // "Newfoundland and Labrador",
-  // "Nova Scotia",
-  // "Ontario",
-  // "Prince Edward Island",
-  // "Quebec",
-  // "Saskatchewan",
-];
-
 const useStyles = makeStyles((theme) => ({
   container: {
     minHeight: 128,

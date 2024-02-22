@@ -51,3 +51,11 @@ export type CreateUserVehicle = {
     year: string;
   };
 };
+
+export type InviteUserToVehicle = {
+  users_vehicle: {
+    email: string;
+    vehicle_id: number;
+    user_id: number;
+  };
+};

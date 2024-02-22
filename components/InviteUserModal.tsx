@@ -1,9 +1,13 @@
 import { useState } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import { Alert, StyleSheet, View, ViewProps } from "react-native";
 import { Button, Card, Modal } from "@ui-kitten/components";
 import { Input, Text } from "@rneui/themed";
-import { Ticket, Vehicle } from "../types/apiTypes";
+import { Ticket, User, Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
+import { useInviteUserToVehicleMutation } from "../api/backendApi";
+import { showAlert } from "./alerts";
+import { useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
 
 interface Props {
   visible: boolean;
@@ -21,7 +25,40 @@ export default function InviteUserModal({
   setVisible,
   vehicle,
 }: Props) {
+  const user = useAppSelector((state: RootState) => state.auth.user);
   const emailState = useInputState();
+  const [inviteUser, { isLoading }] = useInviteUserToVehicleMutation();
+
+  const handleInvite = async () => {
+    if (!user || !emailState.value) {
+      return showAlert("Error", "invalid email");
+    }
+
+    console.log({
+      users_vehicle: {
+        email: emailState.value,
+        vehicle_id: vehicle.id,
+        user_id: user.id,
+      },
+    });
+
+    try {
+      const res = await inviteUser({
+        data: {
+          users_vehicle: {
+            email: emailState.value,
+            vehicle_id: vehicle.id,
+            user_id: user.id,
+          },
+        },
+      })
+      showAlert("Invite Sent", "email sent successfully");
+    } catch (e: any) {
+      console.log(e)
+    } finally {
+      setVisible(false)
+    }
+  };
 
   const Footer = (props: ViewProps | undefined): React.ReactElement => (
     <View {...props} style={[props?.style, styles.footerContainer]}>
@@ -36,7 +73,7 @@ export default function InviteUserModal({
       <Button
         style={styles.footerControl}
         size="small"
-        onPress={() => setVisible(false)}
+        onPress={() => handleInvite()}
       >
         INVITE
       </Button>
