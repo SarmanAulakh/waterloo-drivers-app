@@ -1,6 +1,6 @@
 import { firebaseAppAuth } from "../firebaseAuth";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Text, Input, Button, makeStyles } from "@rneui/themed";
 import { AntDesign } from "@expo/vector-icons";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -11,6 +11,8 @@ import BackButton from "../components/BackButton";
 import { setUser } from "../redux/slices/authSlice";
 import { useLazyGetUserQuery } from "../api/backendApi";
 import { useAppDispatch } from "../redux/hooks";
+import * as LocalAuthentication from 'expo-local-authentication';
+import { fetchData, storeData } from "../utils/localStorage";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Login">;
 
@@ -21,9 +23,63 @@ export default function LoginScreen({ navigation }: Props) {
   const [trigger, { isLoading }] = useLazyGetUserQuery();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [biometricType, setBiometricType] = useState(null);
 
-  const handleLogin = () => {
+  const checkBiometricAvailability = async () => {
+    const compatible = await LocalAuthentication.hasHardwareAsync();
+    const enrolled = await LocalAuthentication.isEnrolledAsync();
+    
+    if (compatible && enrolled) {
+      // Biometric authentication is available and enrolled
+      return true;
+    } else {
+      // Biometric authentication is not available or not enrolled
+      return false;
+    }
+  };
+
+  const authenticateWithBiometrics = async () => {
+    const result = await LocalAuthentication.authenticateAsync({
+      promptMessage: 'Authenticate with biometrics',
+    });
+  
+    if (result.success) {
+      // Biometric authentication successful
+      console.log('Biometric authentication successful');
+      await setLoginInfo()
+    } else {
+      // Biometric authentication failed
+      console.log('Biometric authentication failed');
+    }
+  };
+
+  const handleBiometricAuthentication = async () => {
+    const em = await fetchData('email')
+    const pwd = await fetchData('password')
+
+    if (!em && !pwd) {
+      return showAlert('Info', 'must login atleast once to use biometrics')
+    }
+    const isBiometricAvailable = await checkBiometricAvailability();
+    if (isBiometricAvailable) {
+      await authenticateWithBiometrics();
+    } else {
+      console.log('Biometric authentication is not available on this device');
+    }
+  };
+  
+  async function setLoginInfo() {
+    const em = await fetchData('email')
+    const pwd = await fetchData('password')
+
+    setEmail(em || "")
+    setPassword(pwd || "")
+  }
+
+  const handleLogin = async() => {
     setLoading(true);
+    await storeData('email', email)
+    await storeData('password', password)
     signInWithEmailAndPassword(firebaseAppAuth, email, password)
       .then((userCredential) => {
         const { user } = userCredential;
@@ -78,6 +134,11 @@ export default function LoginScreen({ navigation }: Props) {
         onPress={handleLogin}
         style={styles.button}
         loading={loading || isLoading}
+      />
+      <Button 
+        title="Login with Biometrics"
+        onPress={() => handleBiometricAuthentication()}
+        style={styles.button}
       />
       <Button
         title="Register"

@@ -27,6 +27,14 @@
     },
     "web": {
       "favicon": "./assets/images/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow us to use Face ID."
+        }
+      ]
+    ]
   }
 }
