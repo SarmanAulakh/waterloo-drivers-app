@@ -44,7 +44,7 @@ export default function MapScreen({ navigation }: Props) {
                                 description={marker.icon_type}
                             >
                                 <Image
-                                    source="require(../assets/images/flying-rocket-png.jpeg"
+                                    source={marker_images[marker.icon_type]}
                                     style={styles.markerImage}
                                 />
                             </Marker>
@@ -54,6 +54,13 @@ export default function MapScreen({ navigation }: Props) {
             {/* </SafeAreaView> */}
         </Background>
     );
+}
+//marker_images[marker.icon_type].icon
+const image_path = "../assets/images/";
+const marker_images: Record<string, any> = {
+    redlight: require(image_path + "redlight.png"),
+    speedtrap: require(image_path + "speedtrap.png"),
+    parking: require(image_path + "parking.png")
 }
 
 const useStyles = makeStyles((theme) => ({
