@@ -11,6 +11,7 @@ import { ActivityIndicator, View, StyleSheet } from "react-native";
 import AddVehicleScreen from "../screens/AddVehicleScreen";
 import LoginScreen from "../screens/LoginScreen";
 import { useAppSelector } from "../redux/hooks";
+import MapScreen from "../screens/MapScreen";
 
 const theme = {
   ...DefaultTheme,
@@ -49,6 +50,7 @@ export default function Navigation() {
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="AddVehicle" component={AddVehicleScreen} />
           <Stack.Screen name="Main" component={BottomTabs} />
+          <Stack.Screen name="Map" component={MapScreen} />
         </Stack.Navigator>
       </PersistGate>
     </NavigationContainer>

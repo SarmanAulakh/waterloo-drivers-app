@@ -7,6 +7,7 @@ import {
   Ticket,
   User,
   Vehicle,
+  MapMarkers
 } from "../types/apiTypes";
 import { emptySplitApi } from ".";
 
@@ -69,6 +70,9 @@ export const api = emptySplitApi.injectEndpoints({
       }),
       invalidatesTags: ["Vehicles"],
     }),
+    getMapMarkers: builder.query<MapMarkers[], null>({
+      query: () => ({ url: `${BASE_URL}/map_markers` }),
+    }),
   }),
 });
 
@@ -79,6 +83,7 @@ export const {
   useGetUserVehiclesQuery,
   useCreateUserVehicleMutation,
   useGetUserTicketsQuery,
+  useGetMapMarkersQuery,
   useInviteUserToVehicleMutation,
   useCreateUserVehicleConnectionMutation,
 } = api;

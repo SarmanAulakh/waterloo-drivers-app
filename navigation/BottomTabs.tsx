@@ -5,6 +5,7 @@ import React from "react";
 import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import TicketScreen from "../screens/TicketScreen";
+import MapScreen from "../screens/MapScreen";
 
 const Tab = createBottomTabNavigator<TabNavigationParamList>();
 
@@ -34,6 +35,16 @@ export default function BottomTabs() {
         options={{
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="ticket-outline" size={size} color={color} />
+          ),
+          tabBarStyle: { backgroundColor: Colors.secondary },
+        }}
+      />
+      <Tab.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="map" size={size} color={color} />
           ),
           tabBarStyle: { backgroundColor: Colors.secondary },
         }}
