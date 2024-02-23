@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   CreateUser,
   CreateUserVehicle,
+  CreateUserVehicleConnection,
   InviteUserToVehicle,
   Ticket,
   User,
@@ -13,7 +14,7 @@ const BASE_URL =
   "https://rails-ticket-server-d195e679f8ce.herokuapp.com/api/v1";
 
 export const api = emptySplitApi.injectEndpoints({
-  overrideExisting: false,
+  overrideExisting: true,
   endpoints: (builder) => ({
     getUser: builder.query<User, string>({
       query: (firebaseUserId) => ({
@@ -50,15 +51,23 @@ export const api = emptySplitApi.injectEndpoints({
         url: `${BASE_URL}/users/${firebaseUserId}/tickets`,
       }),
     }),
-    inviteUserToVehicle: builder.mutation<
-      User,
-      { data: InviteUserToVehicle }
-    >({
-      query: ({ data }) => ({
+    inviteUserToVehicle: builder.mutation<null, InviteUserToVehicle>({
+      query: (data) => ({
         url: `${BASE_URL}/users_vehicles/invite`,
         method: "POST",
         body: data,
       }),
+    }),
+    createUserVehicleConnection: builder.mutation<
+      null,
+      CreateUserVehicleConnection
+    >({
+      query: (data) => ({
+        url: `${BASE_URL}/users_vehicles/invite`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Vehicles"],
     }),
   }),
 });
@@ -70,5 +79,6 @@ export const {
   useGetUserVehiclesQuery,
   useCreateUserVehicleMutation,
   useGetUserTicketsQuery,
-  useInviteUserToVehicleMutation
+  useInviteUserToVehicleMutation,
+  useCreateUserVehicleConnectionMutation,
 } = api;

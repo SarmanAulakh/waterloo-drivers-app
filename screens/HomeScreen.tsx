@@ -3,7 +3,6 @@ import {
   Avatar,
   Text,
   Button,
-  Icon,
   ListItem,
   makeStyles,
 } from "@rneui/themed";
@@ -73,12 +72,7 @@ export default function HomeScreen({ navigation }: Props) {
           </ListItem.Content>
           <Button
             icon={
-              <Icon
-                name="md-person-add"
-                type="ionicon"
-                color="black"
-                size={24}
-              />
+              <AntDesign name="adduser" size={24} color="black" />
             }
             buttonStyle={{ backgroundColor: Colors.tertiary }}
             onPress={() => setVisible(true)}
@@ -169,7 +163,7 @@ export default function HomeScreen({ navigation }: Props) {
                 color: "#fff",
               }}
               onPress={() => {
-                navigation.navigate("Welcome");
+                navigation.navigate("Login");
                 dispatch(logOut());
               }}
             />

@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View, ViewProps } from "react-native";
-import { Button, Card, Modal } from "@ui-kitten/components";
-import { Input, Text } from "@rneui/themed";
+import { Card, Modal } from "@ui-kitten/components";
+import { Input, Text, Button } from "@rneui/themed";
 import { Ticket, User, Vehicle } from "../types/apiTypes";
 import { AntDesign } from "@expo/vector-icons";
 import { useInviteUserToVehicleMutation } from "../api/backendApi";
 import { showAlert } from "./alerts";
 import { useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
+import React from "react";
 
 interface Props {
   visible: boolean;
@@ -34,49 +35,38 @@ export default function InviteUserModal({
       return showAlert("Error", "invalid email");
     }
 
-    console.log({
-      users_vehicle: {
-        email: emailState.value,
-        vehicle_id: vehicle.id,
-        user_id: user.id,
-      },
-    });
-
     try {
-      const res = await inviteUser({
-        data: {
-          users_vehicle: {
-            email: emailState.value,
-            vehicle_id: vehicle.id,
-            user_id: user.id,
-          },
+      await inviteUser({
+        users_vehicle: {
+          email: emailState.value,
+          vehicle_id: vehicle.id,
+          user_id: user.firebase_id,
         },
-      })
+      });
       showAlert("Invite Sent", "email sent successfully");
     } catch (e: any) {
-      console.log(e)
+      console.log(e);
     } finally {
-      setVisible(false)
+      setVisible(false);
     }
   };
 
   const Footer = (props: ViewProps | undefined): React.ReactElement => (
     <View {...props} style={[props?.style, styles.footerContainer]}>
       <Button
+        title="CANCEL"
         style={styles.footerControl}
-        size="small"
-        status="basic"
+        // size="small"
+        // status="basic"
         onPress={() => setVisible(false)}
-      >
-        CANCEL
-      </Button>
+      />
       <Button
+        title="INVITE"
         style={styles.footerControl}
-        size="small"
+        // size="small"
         onPress={() => handleInvite()}
-      >
-        INVITE
-      </Button>
+        loading={isLoading}
+      />
     </View>
   );
 
