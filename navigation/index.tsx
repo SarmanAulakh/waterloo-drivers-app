@@ -9,7 +9,6 @@ import BottomTabs from "./BottomTabs";
 import { PersistGate } from "redux-persist/integration/react";
 import { ActivityIndicator, View, StyleSheet } from "react-native";
 import AddVehicleScreen from "../screens/AddVehicleScreen";
-import WelcomeScreen from "../screens/WelcomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import { useAppSelector } from "../redux/hooks";
 import MapScreen from "../screens/MapScreen";
@@ -42,13 +41,11 @@ export default function Navigation() {
         persistor={persistor}
       >
         <Stack.Navigator
-          initialRouteName={user ? "Main" : "Welcome"}
-          // initialRouteName="Welcome"
+          initialRouteName={user ? "Main" : "Login"}
           screenOptions={{
             headerShown: false,
           }}
         >
-          <Stack.Screen name="Welcome" component={WelcomeScreen} />
           <Stack.Screen name="Login" component={LoginScreen} />
           <Stack.Screen name="Register" component={RegisterScreen} />
           <Stack.Screen name="AddVehicle" component={AddVehicleScreen} />

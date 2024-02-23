@@ -3,7 +3,6 @@ import {
   Avatar,
   Text,
   Button,
-  Icon,
   ListItem,
   makeStyles,
 } from "@rneui/themed";
@@ -17,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
 import InviteUserModal from "../components/InviteUserModal";
 import { logOut } from "../redux/slices/authSlice";
+import AddCarModal from "../components/AddCarModal";
 
 type Props = NativeStackScreenProps<
   TabNavigationParamList & RootStackParamList,
@@ -28,8 +28,9 @@ export default function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.auth.user);
   const [visible, setVisible] = useState(false);
+  const [showAddCar, setShowAddCar] = useState(false);
 
-  const { data } = useGetUserVehiclesQuery(user!.firebase_id, {
+  const { data } = useGetUserVehiclesQuery(user?.firebase_id!, {
     skip: !user!,
   });
 
@@ -71,12 +72,7 @@ export default function HomeScreen({ navigation }: Props) {
           </ListItem.Content>
           <Button
             icon={
-              <Icon
-                name="md-person-add"
-                type="ionicon"
-                color="black"
-                size={24}
-              />
+              <AntDesign name="adduser" size={24} color="black" />
             }
             buttonStyle={{ backgroundColor: Colors.tertiary }}
             onPress={() => setVisible(true)}
@@ -167,7 +163,7 @@ export default function HomeScreen({ navigation }: Props) {
                 color: "#fff",
               }}
               onPress={() => {
-                navigation.navigate("Welcome");
+                navigation.navigate("Login");
                 dispatch(logOut());
               }}
             />
@@ -181,11 +177,16 @@ export default function HomeScreen({ navigation }: Props) {
                 fontWeight: "bold",
                 color: Colors.primaryText,
               }}
-              onPress={() => navigation.navigate("AddVehicle")}
+              onPress={() => setShowAddCar(true)}
             />
           </View>
         </View>
       </View>
+      <AddCarModal
+        navigation={navigation}
+        visible={showAddCar}
+        setVisible={setShowAddCar}
+      />
       <ScrollView>
         <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
       </ScrollView>

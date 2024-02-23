@@ -61,3 +61,18 @@ export type MapMarkers = {
   updated_at: string;
   name: string;
 };
+export type InviteUserToVehicle = {
+  users_vehicle: {
+    email: string;
+    vehicle_id: number;
+    user_id: string;
+  };
+};
+
+export type CreateUserVehicleConnection = {
+  users_vehicle: {
+    user_id: string;
+    licence_plate: string;
+    code: string;
+  };
+};
