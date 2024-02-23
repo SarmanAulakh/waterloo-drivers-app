@@ -9,6 +9,7 @@ import { ApplicationProvider } from "@ui-kitten/components";
 import fonts from "./config/fonts";
 import Navigation from "./navigation";
 import { store } from "./redux/store";
+import React from "react";
 
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);
