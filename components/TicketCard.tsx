@@ -2,7 +2,7 @@ import { StyleSheet, View, ViewProps } from "react-native";
 import { Button, Card, Text } from "@ui-kitten/components";
 import { Ticket, Vehicle } from "../types/apiTypes";
 import DisputeModal from "./DisputeModal";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface Props {
   ticket: Ticket;

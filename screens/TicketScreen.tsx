@@ -1,31 +1,7 @@
-import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  ScrollView,
-} from "react-native";
-import {
-  Text,
-  Button,
-  Icon,
-  Image,
-  ListItem,
-  Theme,
-  makeStyles,
-  withTheme,
-} from "@rneui/themed";
-import { firebaseAppAuth } from "../firebaseAuth";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import { View, ScrollView } from "react-native";
+import { Text } from "@rneui/themed";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList, TabNavigationParamList } from "../types";
-import { Ticket, Vehicle } from "../types/apiTypes";
-import { AntDesign } from "@expo/vector-icons";
-import Colors from "../constants/Colors";
+import { TabNavigationParamList } from "../types";
 import TicketCard from "../components/TicketCard";
 import {
   useGetUserTicketsQuery,
@@ -33,7 +9,7 @@ import {
 } from "../api/backendApi";
 import { useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
-import Background from "../components/Background";
+import React from "react"
 
 type Props = NativeStackScreenProps<TabNavigationParamList, "Ticket">;
 
@@ -51,7 +27,7 @@ export default function TicketScreen({ navigation }: Props) {
     ?.filter((t) => t.status === "pending")
     .map((ticket) => (
       <TicketCard
-        key={ticket.id}
+        // key={ticket.id}
         ticket={ticket}
         vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
         url="Mock Url"
@@ -62,7 +38,7 @@ export default function TicketScreen({ navigation }: Props) {
     ?.filter((t) => t.status !== "pending")
     .map((ticket) => (
       <TicketCard
-        key={ticket.id}
+        // key={ticket.id}
         ticket={ticket}
         vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
         url="Mock Url"

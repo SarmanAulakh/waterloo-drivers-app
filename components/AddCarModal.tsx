@@ -29,13 +29,13 @@ export default function AddCarModal({
     }
 
     try {
-      const res = await joinVehicle({
+      await joinVehicle({
         users_vehicle: {
           code: inviteCode,
           licence_plate: carLicensePlate,
           user_id: user.firebase_id,
         },
-      });
+      })
       showAlert("Info", "Vechile was joined successfully");
     } catch (e: any) {
       console.log(e);

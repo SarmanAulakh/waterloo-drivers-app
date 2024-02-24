@@ -7,6 +7,7 @@ export interface User {
   drivers_licence_number: string;
   created_at: string;
   updated_at: string;
+  push_token?: string;
 }
 
 export interface Vehicle {
@@ -54,8 +55,8 @@ export type CreateUserVehicle = {
 
 export type MapMarkers = {
   id: number;
-  latitude: string;
-  longitude: string;
+  latitude: number;
+  longitude: number;
   icon_type: string;
   created_at: string;
   updated_at: string;

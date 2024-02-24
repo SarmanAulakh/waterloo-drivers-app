@@ -64,7 +64,7 @@ export const api = emptySplitApi.injectEndpoints({
       CreateUserVehicleConnection
     >({
       query: (data) => ({
-        url: `${BASE_URL}/users_vehicles/invite`,
+        url: `${BASE_URL}/users_vehicles`,
         method: "POST",
         body: data,
       }),
