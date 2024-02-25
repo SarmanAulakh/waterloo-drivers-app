@@ -1,22 +1,27 @@
-import { View, ScrollView } from "react-native";
-import {
-  Avatar,
-  Text,
-  Button,
-  Icon,
-  ListItem,
-  makeStyles,
-} from "@rneui/themed";
-import React, { useState } from "react";
+import { View, ScrollView, Platform } from "react-native";
+import { Avatar, Text, Button, ListItem, makeStyles } from "@rneui/themed";
+import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, TabNavigationParamList } from "../types";
 import { useGetUserVehiclesQuery } from "../api/backendApi";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
 import InviteUserModal from "../components/InviteUserModal";
 import { logOut } from "../redux/slices/authSlice";
+import AddCarModal from "../components/AddCarModal";
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import Constants from "expo-constants";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 type Props = NativeStackScreenProps<
   TabNavigationParamList & RootStackParamList,
@@ -28,12 +33,45 @@ export default function HomeScreen({ navigation }: Props) {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state: RootState) => state.auth.user);
   const [visible, setVisible] = useState(false);
+  const [expanded, setExpanded] = useState<number | null>(null);
+  const [showAddCar, setShowAddCar] = useState(false);
+  const [expoPushToken, setExpoPushToken] = useState("");
+  // const [notification, setNotification] = useState<Notifications.Notification | null>(null);
+  const notificationListener = useRef<Notifications.Subscription | null>(null);
+  const responseListener = useRef<Notifications.Subscription | null>(null);
 
-  const { data } = useGetUserVehiclesQuery(user!.firebase_id, {
+  const { data } = useGetUserVehiclesQuery(user?.firebase_id!, {
     skip: !user!,
   });
 
-  const [expanded, setExpanded] = useState<number | null>(null);
+  useEffect(() => {
+    if (!user?.push_token) {
+      registerForPushNotificationsAsync().then((token) =>
+        setExpoPushToken(token || "")
+      );
+    }
+
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((notification) => {
+        console.log(notification);
+      });
+
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
+
+    return () => {
+      if (notificationListener.current) {
+        Notifications.removeNotificationSubscription(
+          notificationListener.current
+        );
+      }
+      if (responseListener.current) {
+        Notifications.removeNotificationSubscription(responseListener.current);
+      }
+    };
+  }, []);
 
   const renderListCards = () => {
     return data?.map((vehicle, index) => (
@@ -70,14 +108,7 @@ export default function HomeScreen({ navigation }: Props) {
             <ListItem.Subtitle>Driver B</ListItem.Subtitle>
           </ListItem.Content>
           <Button
-            icon={
-              <Icon
-                name="md-person-add"
-                type="ionicon"
-                color="black"
-                size={24}
-              />
-            }
+            icon={<AntDesign name="adduser" size={24} color="black" />}
             buttonStyle={{ backgroundColor: Colors.tertiary }}
             onPress={() => setVisible(true)}
           />
@@ -136,9 +167,20 @@ export default function HomeScreen({ navigation }: Props) {
           >
             <Text style={{ fontSize: 25, marginLeft: -15 }}>{user?.name}</Text>
             <Text style={{ fontSize: 18, marginLeft: -15 }}>{user?.email}</Text>
-            <Text style={{ fontSize: 18, marginLeft: -15, marginTop: 15 }}>
-              {user?.drivers_licence_number}
-            </Text>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                marginLeft: -15,
+                marginTop: 20,
+              }}
+            >
+              <FontAwesome name="drivers-license-o" size={24} color="black" />
+              <Text style={{ fontSize: 18, marginLeft: 8 }}>
+                {user?.drivers_licence_number}
+              </Text>
+            </View>
           </View>
         </View>
         <View
@@ -167,7 +209,7 @@ export default function HomeScreen({ navigation }: Props) {
                 color: "#fff",
               }}
               onPress={() => {
-                navigation.navigate("Welcome");
+                navigation.navigate("Login");
                 dispatch(logOut());
               }}
             />
@@ -181,11 +223,16 @@ export default function HomeScreen({ navigation }: Props) {
                 fontWeight: "bold",
                 color: Colors.primaryText,
               }}
-              onPress={() => navigation.navigate("AddVehicle")}
+              onPress={() => setShowAddCar(true)}
             />
           </View>
         </View>
       </View>
+      <AddCarModal
+        navigation={navigation}
+        visible={showAddCar}
+        setVisible={setShowAddCar}
+      />
       <ScrollView>
         <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
       </ScrollView>
@@ -202,3 +249,42 @@ const useStyles = makeStyles((theme) => ({
     paddingVertical: 5,
   },
 }));
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === "android") {
+    await Notifications.setNotificationChannelAsync("default", {
+      name: "default",
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: "#FF231F7C",
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } =
+      await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== "granted") {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== "granted") {
+      alert("Failed to get push token for push notification!");
+      return;
+    }
+    // Learn more about projectId:
+    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
+    token = (
+      await Notifications.getExpoPushTokenAsync({
+        projectId: Constants.expoConfig?.extra?.eas?.projectId,
+      })
+    ).data;
+    console.log(token);
+  } else {
+    alert("Must use physical device for Push Notifications");
+  }
+
+  return token;
+}

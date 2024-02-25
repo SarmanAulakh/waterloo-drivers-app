@@ -5,6 +5,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types";
 import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 import BackButton from "../components/BackButton";
 import Background from "../components/Background";
 import { useCreateUserMutation } from "../api/backendApi";
@@ -39,6 +40,8 @@ export default function RegisterScreen({ navigation }: Props) {
             drivers_licence_number: license,
           },
         };
+
+        console.log(body);
 
         createUser(body)
           .unwrap()
@@ -76,7 +79,9 @@ export default function RegisterScreen({ navigation }: Props) {
         placeholder="Drivers License Number"
         value={license}
         onChangeText={setLicense}
-        leftIcon={<AntDesign name="car" size={24} color="black" />}
+        leftIcon={
+          <FontAwesome name="drivers-license-o" size={24} color="black" />
+        }
         autoCapitalize="none"
       />
       <Input

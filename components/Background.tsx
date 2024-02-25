@@ -20,6 +20,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: Colors.background,
     alignItems: "center",
     alignSelf: "center",
-    padding: 20,
+    // padding: 20,
   },
 }));

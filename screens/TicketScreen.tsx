@@ -1,60 +1,39 @@
-import {
-  SafeAreaView,
-  View,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  FlatList,
-  ListRenderItem,
-  ScrollView,
-} from "react-native";
-import {
-  Text,
-  Button,
-  Icon,
-  Image,
-  ListItem,
-  Theme,
-  makeStyles,
-  withTheme,
-} from "@rneui/themed";
-import { firebaseAppAuth } from "../firebaseAuth";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import React, { useState } from "react";
+import { View, ScrollView } from "react-native";
+import { Text } from "@rneui/themed";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { RootStackParamList, TabNavigationParamList } from "../types";
-import { Ticket, Vehicle } from "../types/apiTypes";
-import { AntDesign } from "@expo/vector-icons";
-import Colors from "../constants/Colors";
+import { TabNavigationParamList } from "../types";
 import TicketCard from "../components/TicketCard";
 import {
+  useGetPaymentSheetParamsQuery,
   useGetUserTicketsQuery,
   useGetUserVehiclesQuery,
 } from "../api/backendApi";
 import { useAppSelector } from "../redux/hooks";
 import { RootState } from "../redux/store";
-import Background from "../components/Background";
+import React from "react";
+
 
 type Props = NativeStackScreenProps<TabNavigationParamList, "Ticket">;
 
 export default function TicketScreen({ navigation }: Props) {
   const user = useAppSelector((state: RootState) => state.auth.user);
 
-  const { data: userTickets } = useGetUserTicketsQuery(user!.firebase_id, {
-    skip: !user!,
+  const { data: userTickets, refetch } = useGetUserTicketsQuery(user?.firebase_id || '', {
+    skip: !user,
   });
-  const { data: userVehicles } = useGetUserVehiclesQuery(user!.firebase_id, {
-    skip: !user!,
+  const { data: userVehicles } = useGetUserVehiclesQuery(user?.firebase_id || '', {
+    skip: !user,
   });
 
   const renderPendingTickets = userTickets
     ?.filter((t) => t.status === "pending")
     .map((ticket) => (
       <TicketCard
-        key={ticket.id}
+        // key={ticket.id}
         ticket={ticket}
         vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
         url="Mock Url"
+        refetchTicket={refetch}
       />
     ));
 
@@ -62,10 +41,11 @@ export default function TicketScreen({ navigation }: Props) {
     ?.filter((t) => t.status !== "pending")
     .map((ticket) => (
       <TicketCard
-        key={ticket.id}
+        // key={ticket.id}
         ticket={ticket}
         vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
         url="Mock Url"
+        refetchTicket={refetch}
       />
     ));
 
@@ -85,27 +65,3 @@ export default function TicketScreen({ navigation }: Props) {
     </ScrollView>
   );
 }
-
-// const date = new Date().toLocaleDateString();
-// const tickets: Ticket[] = [
-//   {
-//     id: 1,
-//     vehicle_id: 7,
-//     cost: 52.16,
-//     type: "Parking",
-//     issue_date: date,
-//     due_date: date,
-//     created_at: date,
-//     updated_at: date,
-//   },
-//   {
-//     id: 2,
-//     vehicle_id: 7,
-//     cost: 52.16,
-//     type: "Parking",
-//     issue_date: date,
-//     due_date: date,
-//     created_at: date,
-//     updated_at: date,
-//   },
-// ];

@@ -2,18 +2,20 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   CreateUser,
   CreateUserVehicle,
+  CreateUserVehicleConnection,
+  InviteUserToVehicle,
   Ticket,
   User,
   Vehicle,
+  MapMarkers
 } from "../types/apiTypes";
 import { emptySplitApi } from ".";
-import { StripePaymentSheetParams } from "../types/externalApiTypes";
 
 const BASE_URL =
   "https://rails-ticket-server-d195e679f8ce.herokuapp.com/api/v1";
 
 export const api = emptySplitApi.injectEndpoints({
-  overrideExisting: false,
+  overrideExisting: true,
   endpoints: (builder) => ({
     getUser: builder.query<User, string>({
       query: (firebaseUserId) => ({
@@ -50,10 +52,31 @@ export const api = emptySplitApi.injectEndpoints({
         url: `${BASE_URL}/users/${firebaseUserId}/tickets`,
       }),
     }),
-    getPaymentSheetParams: builder.query<StripePaymentSheetParams, null>({
-      query: () => ({
-        url: `${BASE_URL}/payment-sheet`,
+    getPaymentSheetParams: builder.query<any, { firebaseUserId: string, ticketId: number }>({
+      query: ({ firebaseUserId, ticketId }) => ({
+        url: `${BASE_URL}/users/${firebaseUserId}/tickets/${ticketId}/payment_intent`,
       }),
+    }),
+    inviteUserToVehicle: builder.mutation<null, InviteUserToVehicle>({
+      query: (data) => ({
+        url: `${BASE_URL}/users_vehicles/invite`,
+        method: "POST",
+        body: data,
+      }),
+    }),
+    createUserVehicleConnection: builder.mutation<
+      null,
+      CreateUserVehicleConnection
+    >({
+      query: (data) => ({
+        url: `${BASE_URL}/users_vehicles`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Vehicles"],
+    }),
+    getMapMarkers: builder.query<MapMarkers[], null>({
+      query: () => ({ url: `${BASE_URL}/map_markers` }),
     }),
   }),
 });
@@ -66,4 +89,7 @@ export const {
   useCreateUserVehicleMutation,
   useGetUserTicketsQuery,
   useGetPaymentSheetParamsQuery,
+  useGetMapMarkersQuery,
+  useInviteUserToVehicleMutation,
+  useCreateUserVehicleConnectionMutation,
 } = api;

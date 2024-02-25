@@ -1,3 +1,4 @@
+import React from "react";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
 import { Provider as StoreProvider } from "react-redux";
@@ -14,6 +15,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 const stripe_pb_key =
   "pk_test_51ObmddIjD8jpShaM8DjkSxcAmQ6sRxxyVpZs0wla06LQgi44uTdGgRu9YHO8EzJebRlIl7BkScGlw2AVuSJFVaas003UHzq3LK";
 
+
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);
 
@@ -24,7 +26,7 @@ export default function App() {
       <PaperProvider>
         <SafeAreaProvider>
           <ApplicationProvider {...eva} theme={eva.light}>
-            <StripeProvider publishableKey={stripe_pb_key} urlScheme="">
+            <StripeProvider publishableKey={stripe_pb_key} urlScheme="" merchantIdentifier="WaterlooDriversApp">
               <Navigation />
             </StripeProvider>
             <StatusBar />
