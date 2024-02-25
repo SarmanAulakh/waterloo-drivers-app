@@ -104,8 +104,8 @@ export default function HomeScreen({ navigation }: Props) {
             <ListItem.Title style={{ paddingTop: 5 }}>
               Other Drivers:
             </ListItem.Title>
-            <ListItem.Subtitle>Driver A</ListItem.Subtitle>
-            <ListItem.Subtitle>Driver B</ListItem.Subtitle>
+            <ListItem.Subtitle>Sarman Aulakh</ListItem.Subtitle>
+            {/* <ListItem.Subtitle>Driver B</ListItem.Subtitle> */}
           </ListItem.Content>
           <Button
             icon={<AntDesign name="adduser" size={24} color="black" />}

@@ -7,7 +7,7 @@ import {
   Ticket,
   User,
   Vehicle,
-  MapMarkers
+  MapMarkers,
 } from "../types/apiTypes";
 import { emptySplitApi } from ".";
 
@@ -51,6 +51,15 @@ export const api = emptySplitApi.injectEndpoints({
       query: (firebaseUserId) => ({
         url: `${BASE_URL}/users/${firebaseUserId}/tickets`,
       }),
+      providesTags: ["Tickets"],
+    }),
+    getPaymentSheetParams: builder.query<
+      any,
+      { firebaseUserId: string; ticketId: number }
+    >({
+      query: ({ firebaseUserId, ticketId }) => ({
+        url: `${BASE_URL}/users/${firebaseUserId}/tickets/${ticketId}/payment_intent`,
+      }),
     }),
     inviteUserToVehicle: builder.mutation<null, InviteUserToVehicle>({
       query: (data) => ({
@@ -73,6 +82,19 @@ export const api = emptySplitApi.injectEndpoints({
     getMapMarkers: builder.query<MapMarkers[], null>({
       query: () => ({ url: `${BASE_URL}/map_markers` }),
     }),
+    disputeTicket: builder.mutation<
+      null,
+      { firebaseUserId: string; ticketId: number; reason: string }
+    >({
+      query: ({ firebaseUserId, ticketId, reason }) => ({
+        url: `${BASE_URL}/users/${firebaseUserId}/tickets/${ticketId}/dispute`,
+        method: 'PUT',
+        body: {
+          reason: reason
+        }
+      }),
+      invalidatesTags: ["Tickets"],
+    }),
   }),
 });
 
@@ -83,7 +105,9 @@ export const {
   useGetUserVehiclesQuery,
   useCreateUserVehicleMutation,
   useGetUserTicketsQuery,
+  useGetPaymentSheetParamsQuery,
   useGetMapMarkersQuery,
   useInviteUserToVehicleMutation,
   useCreateUserVehicleConnectionMutation,
+  useDisputeTicketMutation
 } = api;

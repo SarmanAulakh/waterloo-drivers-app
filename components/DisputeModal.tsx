@@ -1,8 +1,18 @@
-import { useState } from "react";
-import { StyleSheet, View, ViewProps } from "react-native";
+import React, { useEffect, useState } from "react";
+import * as Linking from "expo-linking";
+import { Alert, StyleSheet, View, ViewProps } from "react-native";
 import { Button, Card, Modal, Input, InputProps } from "@ui-kitten/components";
 import { Text } from "@rneui/themed";
 import { Ticket } from "../types/apiTypes";
+import { useStripe } from "@stripe/stripe-react-native";
+import {
+  useDisputeTicketMutation,
+  useGetPaymentSheetParamsQuery,
+} from "../api/backendApi";
+import Constants from "expo-constants";
+import { useAppSelector } from "../redux/hooks";
+import { RootState } from "../redux/store";
+import { showAlert } from "./alerts";
 
 interface Props {
   visible: boolean;
@@ -16,7 +26,26 @@ const useInputState = (initialValue = ""): InputProps => {
 };
 
 export default function DisputeModal({ visible, setVisible, ticket }: Props) {
+  const [loading, setLoading] = useState(false);
+  const user = useAppSelector((state: RootState) => state.auth.user);
   const multilineInputState = useInputState();
+  const [disputeTicket, { isLoading }] = useDisputeTicketMutation();
+
+  const handleSubmitDispute = async () => {
+    try {
+      await disputeTicket({
+        firebaseUserId: user!.firebase_id,
+        ticketId: ticket.id,
+        reason: multilineInputState.value || ""
+      });
+
+      setVisible(false)
+      showAlert('info', 'dispute successfully sent. reply may take a few days')
+    } catch (error) {
+      showAlert('error', 'dispute could not send. try again later')
+    }
+
+  };
 
   const Footer = (props: ViewProps | undefined): React.ReactElement => (
     <View {...props} style={[props?.style, styles.footerContainer]}>
@@ -31,7 +60,8 @@ export default function DisputeModal({ visible, setVisible, ticket }: Props) {
       <Button
         style={styles.footerControl}
         size="small"
-        onPress={() => setVisible(false)}
+        onPress={handleSubmitDispute}
+        disabled={isLoading}
       >
         DISPUTE
       </Button>
@@ -46,7 +76,7 @@ export default function DisputeModal({ visible, setVisible, ticket }: Props) {
     >
       <Card disabled={true} style={styles.card} footer={Footer}>
         <Text h4 style={{ paddingBottom: 20 }}>
-          Dispute Ticket ID: {ticket.id}
+          Dispute Ticket #: {ticket.ticket_number}
         </Text>
 
         <Input

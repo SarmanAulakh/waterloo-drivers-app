@@ -25,12 +25,13 @@ export interface Ticket {
   id: number;
   vehicle_id: number;
   cost: number;
-  type: string;
+  penalty_type: string;
   status: string;
   issue_date: string;
   due_date: string;
   created_at: string;
   updated_at: string;
+  ticket_number: string
 }
 
 export type CreateUser = {

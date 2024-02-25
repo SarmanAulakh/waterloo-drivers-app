@@ -3,5 +3,5 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 export const emptySplitApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/' }),
   endpoints: () => ({}),
-  tagTypes: ["User", "Vehicles"],
+  tagTypes: ["User", "Vehicles", "Tickets"],
 })
