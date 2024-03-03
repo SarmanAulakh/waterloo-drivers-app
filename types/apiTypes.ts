@@ -19,6 +19,7 @@ export interface Vehicle {
   province: string;
   created_at: string;
   updated_at: string;
+  users: string[];
 }
 
 export interface Ticket {
@@ -31,7 +32,7 @@ export interface Ticket {
   due_date: string;
   created_at: string;
   updated_at: string;
-  ticket_number: string
+  ticket_number: string;
 }
 
 export type CreateUser = {

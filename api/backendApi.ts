@@ -88,12 +88,24 @@ export const api = emptySplitApi.injectEndpoints({
     >({
       query: ({ firebaseUserId, ticketId, reason }) => ({
         url: `${BASE_URL}/users/${firebaseUserId}/tickets/${ticketId}/dispute`,
-        method: 'PUT',
+        method: "PUT",
         body: {
-          reason: reason
-        }
+          reason: reason,
+        },
       }),
       invalidatesTags: ["Tickets"],
+    }),
+    setUserPushToken: builder.mutation<
+      null,
+      { firebaseUserId: string; pushToken: string }
+    >({
+      query: ({ firebaseUserId, pushToken }) => ({
+        url: `${BASE_URL}/users/${firebaseUserId}/push_token`,
+        method: "PUT",
+        body: {
+          push_token: pushToken,
+        },
+      }),
     }),
   }),
 });
@@ -109,5 +121,6 @@ export const {
   useGetMapMarkersQuery,
   useInviteUserToVehicleMutation,
   useCreateUserVehicleConnectionMutation,
-  useDisputeTicketMutation
+  useDisputeTicketMutation,
+  useSetUserPushTokenMutation,
 } = api;

@@ -48,23 +48,28 @@ export default function TicketCard({
 
     console.log("win!", paymentIntent);
 
-    const { error } = await initPaymentSheet({
-      merchantDisplayName: "WaterlooDriversApp, Inc.",
-      paymentIntentClientSecret: paymentIntent.client_secret,
-      // Set `allowsDelayedPaymentMethods` to true if your business can handle payment
-      // methods that complete payment after a delay, like SEPA Debit and Sofort.
-      // allowsDelayedPaymentMethods: true,
-      defaultBillingDetails: {
-        name: "Jane Doe",
-      },
-      returnURL:
-        Constants.appOwnership === "expo"
-          ? Linking.createURL("/--/")
-          : Linking.createURL(""),
-    });
-    console.log("error2", error);
-    if (!error) {
-      // setLoading(true);
+    if (Constants.appOwnership === "expo") {
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: "WaterlooDriversApp, Inc.",
+        paymentIntentClientSecret: paymentIntent.client_secret,
+        defaultBillingDetails: {
+          name: "Jane Doe",
+        },
+        returnURL:
+          Constants.appOwnership === "expo"
+            ? Linking.createURL("/--/")
+            : Linking.createURL(""),
+      });
+      console.log("error2", error);
+    } else {
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: "WaterlooDriversApp, Inc.",
+        paymentIntentClientSecret: paymentIntent.client_secret,
+        defaultBillingDetails: {
+          name: "Jane Doe",
+        },
+      });
+      console.log("error2", error);
     }
     setLoading(false);
   };
@@ -88,7 +93,7 @@ export default function TicketCard({
       style={{
         flexDirection: "row",
         alignItems: "center",
-        padding: 20
+        padding: 20,
       }}
     >
       <Text category="h6" style={styles.penalty_type}>
@@ -101,7 +106,7 @@ export default function TicketCard({
   );
 
   const Footer = (props: ViewProps | undefined): React.ReactElement => {
-    if (completed) return <></>;
+    if (completed || ticket?.status === "in_dispute") return <></>;
     return (
       <View {...props} style={[props?.style, styles.footerContainer]}>
         <Button
@@ -110,6 +115,7 @@ export default function TicketCard({
           type="outline"
           onPress={() => setVisible(true)}
         />
+
         <Button
           title="PAY"
           style={styles.footerControl}

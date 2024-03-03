@@ -3,7 +3,10 @@ import { Avatar, Text, Button, ListItem, makeStyles } from "@rneui/themed";
 import React, { useEffect, useRef, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList, TabNavigationParamList } from "../types";
-import { useGetUserVehiclesQuery } from "../api/backendApi";
+import {
+  useGetUserVehiclesQuery,
+  useSetUserPushTokenMutation,
+} from "../api/backendApi";
 import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
@@ -35,20 +38,33 @@ export default function HomeScreen({ navigation }: Props) {
   const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState<number | null>(null);
   const [showAddCar, setShowAddCar] = useState(false);
-  const [expoPushToken, setExpoPushToken] = useState("");
   // const [notification, setNotification] = useState<Notifications.Notification | null>(null);
   const notificationListener = useRef<Notifications.Subscription | null>(null);
   const responseListener = useRef<Notifications.Subscription | null>(null);
+
+  const [setPushToken] = useSetUserPushTokenMutation();
 
   const { data } = useGetUserVehiclesQuery(user?.firebase_id!, {
     skip: !user!,
   });
 
   useEffect(() => {
-    if (!user?.push_token) {
-      registerForPushNotificationsAsync().then((token) =>
-        setExpoPushToken(token || "")
-      );
+    if (user && !user?.push_token) {
+      registerForPushNotificationsAsync().then((token) => {
+        console.log("token", token);
+        setPushToken({
+          firebaseUserId: user.firebase_id,
+          pushToken: token || "",
+        })
+          .then((e) =>
+            console.log("a", {
+              firebaseUserId: user.firebase_id,
+              pushToken: token || "",
+            })
+          )
+          .catch((e) => console.log("error", e));
+        return null;
+      });
     }
 
     notificationListener.current =
@@ -104,8 +120,9 @@ export default function HomeScreen({ navigation }: Props) {
             <ListItem.Title style={{ paddingTop: 5 }}>
               Other Drivers:
             </ListItem.Title>
-            <ListItem.Subtitle>Sarman Aulakh</ListItem.Subtitle>
-            {/* <ListItem.Subtitle>Driver B</ListItem.Subtitle> */}
+            {vehicle.users?.map((u) => (
+              <ListItem.Subtitle key={u}>{u}</ListItem.Subtitle>
+            ))}
           </ListItem.Content>
           <Button
             icon={<AntDesign name="adduser" size={24} color="black" />}
@@ -233,7 +250,13 @@ export default function HomeScreen({ navigation }: Props) {
         visible={showAddCar}
         setVisible={setShowAddCar}
       />
-      <ScrollView>
+      <ScrollView
+        style={{
+          flex: 1,
+          flexDirection: "column",
+          borderRadius: 5,
+        }}
+      >
         <View style={{ marginVertical: 10 }}>{renderListCards()}</View>
       </ScrollView>
     </>
