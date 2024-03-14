@@ -152,7 +152,7 @@ export default function LoginScreen({ navigation }: Props) {
 
       <Button
         title="Login"
-        onPress={handleLogin}
+        onPress={() => handleLogin()}
         style={styles.button}
         loading={loading || isLoading}
       />

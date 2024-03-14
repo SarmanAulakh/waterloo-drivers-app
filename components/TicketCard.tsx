@@ -39,8 +39,8 @@ export default function TicketCard({
   const { initPaymentSheet } = useStripe();
   const user = useAppSelector((state: RootState) => state.auth.user);
   const { data: paymentIntent, error } = useGetPaymentSheetParamsQuery(
-    { firebaseUserId: user!.firebase_id, ticketId: ticket.id },
-    { skip: !user || !ticket }
+    { firebaseUserId: user?.firebase_id || "", ticketId: ticket.id },
+    { skip: !user?.firebase_id || !ticket }
   );
 
   const initializePaymentSheet = async () => {
@@ -166,7 +166,7 @@ export default function TicketCard({
             alignItems: "center",
           }}
         >
-          <Text style={styles.title}>Vehcile: </Text>
+          <Text style={styles.title}>Vehicle: </Text>
           <Text>
             {vehicle
               ? `${vehicle.make} - ${vehicle.model} - ${vehicle.year}`

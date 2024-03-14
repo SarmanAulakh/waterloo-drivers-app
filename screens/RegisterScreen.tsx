@@ -102,7 +102,7 @@ export default function RegisterScreen({ navigation }: Props) {
       />
       <Button
         title="Register"
-        onPress={handleSignup}
+        onPress={() => handleSignup()}
         style={styles.button}
         loading={loading || isLoading}
       />

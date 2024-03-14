@@ -33,8 +33,11 @@ export default function AddVehicleScreen({ route, navigation }: Props) {
   const [carYear, setCarYear] = useState("");
 
   const handleRegistrationInfoSubmit = () => {
+    if (!user) {
+      return showAlert('Error', 'user not found')
+    }
     createUserVehicle({
-      firebaseUserId: user?.firebase_id || "",
+      firebaseUserId: user.firebase_id,
       data: {
         vehicle: {
           licence_plate: carLicensePlate,

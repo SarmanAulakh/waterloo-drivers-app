@@ -34,7 +34,7 @@ export default function DisputeModal({ visible, setVisible, ticket }: Props) {
   const handleSubmitDispute = async () => {
     try {
       await disputeTicket({
-        firebaseUserId: user!.firebase_id,
+        firebaseUserId: user?.firebase_id || "",
         ticketId: ticket.id,
         reason: multilineInputState.value || ""
       });

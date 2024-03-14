@@ -6,6 +6,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { PaperProvider } from "react-native-paper";
 import * as eva from "@eva-design/eva";
 import { ApplicationProvider } from "@ui-kitten/components";
+import { LogBox } from "react-native";
 
 import fonts from "./config/fonts";
 import Navigation from "./navigation";
@@ -15,6 +16,7 @@ import { StripeProvider } from "@stripe/stripe-react-native";
 const stripe_pb_key =
   "pk_test_51ObmddIjD8jpShaM8DjkSxcAmQ6sRxxyVpZs0wla06LQgi44uTdGgRu9YHO8EzJebRlIl7BkScGlw2AVuSJFVaas003UHzq3LK";
 
+LogBox.ignoreAllLogs() // hide annoying yellow warning logs during demo
 
 export default function App() {
   const [fontsLoaded] = useFonts(fonts);

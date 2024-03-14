@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet } from "react-native";
+import { View, ScrollView, StyleSheet, RefreshControl } from "react-native";
 import { ListItem, Text } from "@rneui/themed";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { TabNavigationParamList } from "../types";
@@ -18,6 +18,7 @@ export default function TicketScreen({ navigation }: Props) {
   const user = useAppSelector((state: RootState) => state.auth.user);
   const [expandUnpaid, setexpandUnpaid] = useState(true);
   const [expandOld, setexpandOld] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { data: userTickets, refetch } = useGetUserTicketsQuery(
     user?.firebase_id || "",
@@ -32,11 +33,19 @@ export default function TicketScreen({ navigation }: Props) {
     }
   );
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    refetch().then(() => {
+      setRefreshing(false);
+    });
+  }, []);
+
   const renderPendingTickets = userTickets
     ?.filter((t) => !["paid", "cancelled"].includes(t.status))
+    .reverse()
     .map((ticket) => (
       <TicketCard
-        // key={ticket.id}
+        key={ticket.ticket_number}
         ticket={ticket}
         vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
         url="Mock Url"
@@ -47,9 +56,10 @@ export default function TicketScreen({ navigation }: Props) {
 
   const renderHistoryTickets = userTickets
     ?.filter((t) => ["paid", "cancelled"].includes(t.status))
+    .reverse()
     .map((ticket) => (
       <TicketCard
-        // key={ticket.id}
+        key={ticket.ticket_number}
         ticket={ticket}
         vehicle={userVehicles?.find((v) => v.id === ticket.vehicle_id)}
         url="Mock Url"
@@ -59,7 +69,11 @@ export default function TicketScreen({ navigation }: Props) {
     ));
 
   return (
-    <ScrollView>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <View style={{ paddingVertical: 20 }}>
         <ListItem.Accordion
           content={
